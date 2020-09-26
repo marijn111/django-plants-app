@@ -2,38 +2,75 @@
 {% load static %}
 {% block content %}
 
-    <section class="section">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-offset-4 is-4">
-                    {% for plant in object_list %}
-                    <div class="box">
-                        <article class="media">
-                            <div class="media-left">
-                                <figure class="image is-50x50">
-                                    <img src="#" alt="Image">
-                                </figure>
-                            </div>
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <span class="title">{{ plant.name }}</span>
-                                        <br>
-                                        <span class="subtitle">{{ plant.age }}° C</span>
-                                        <br> {{ plant.description }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="media-right">
-                                <a href='#'>
-                                    <button class='delete'></button>
-                                </a>
-                            </div>
-                        </article>
+
+{#    <section class="section">#}
+{#        <div class="container">#}
+{#            <div class="columns">#}
+{#                <div class="column is-offset-4 is-4">#}
+{#                    {% for plant in object_list %}#}
+{#                    <div class="box">#}
+{#                        <article class="media">#}
+{#                            <div class="media-left">#}
+{#                                <figure class="image is-50x50">#}
+{#                                    <img src="#" alt="Image">#}
+{#                                </figure>#}
+{#                            </div>#}
+{#                            <div class="media-content">#}
+{#                                <div class="content">#}
+{#                                    <p>#}
+{#                                        <span class="title">{{ plant.name }}</span>#}
+{#                                        <br>#}
+{#                                        <span class="subtitle">{{ plant.age }}</span>#}
+{#                                        <br> {{ plant.description }}#}
+{#                                    </p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="media-right">#}
+{##}
+{#                            </div>#}
+{#                        </article>#}
+{#                    </div>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </section>#}
+    <style>
+        .container {
+            margin-top: 100px;
+            margin-bottom: 50px;
+        }
+    </style>
+
+
+    <section class="container">
+        <div class="columns features">
+            {% for plant in object_list %}
+            <div class="column is-4">
+                <div class="card is-shady">
+                    <div class="card-image">
+
+                        <figure class="image is-4by3">
+                          <img src="#" alt="Placeholder image" class="modal-button" data-target="modal-image2">
+                        </figure>
+
                     </div>
-                    {% endfor %}
+                    <div class="card-content">
+                        <div class="content">
+                        <a href="{% url 'plant_item' plant.id %}">
+                            <h4>{{ plant.name }}</h4>
+                        </a>
+                          <p>{{ plant.description }}</p>
+                            <span class="button is-link modal-button" data-target="modal-image2">Image modal</span>
+
+                            <a class="right" href='{% url "delete_plant" plant.id %}'>
+                                <button class='delete'></button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </section>
 

@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from . import forms
 from . import models
+
+
+User = get_user_model()
+
 
 # Create your views here.
 def home_page(request):
@@ -27,7 +33,7 @@ def login_page(request):
 
                 # redirect to succesfull page
                 print('logged in yay')
-                return redirect('/login')
+                return redirect('/plants')
             else:
 
                 print('nope')
@@ -41,7 +47,7 @@ def login_page(request):
 
     return render(request, 'plants/login_page.html', context)
 
-User = get_user_model()
+
 def register_page(request):
 
     form = forms.RegisterForm(request.POST or None)
@@ -67,11 +73,35 @@ def logout_user(request):
         return redirect('/')
 
 
-class PlantListView(ListView):
-    model = models.Plant
-    paginate_by = 5
+class PlantListView(LoginRequiredMixin, ListView):
+    login_url = '/login'
+
     template_name = 'plants/plants_overview.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+    def get_queryset(self):
+        return models.Plant.objects.filter(user=self.request.user)
+
+
+class PlantItemView(LoginRequiredMixin, DetailView):
+    login_url = '/login'
+
+    template_name = 'plants/plants_detail.html'
+    # , id = self.get_slug_field()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
+        return models.Plant.objects.filter(user=self.request.user, id=self.kwargs.get('pk'))
+
+
+def delete_plant(request, plant_id):
+    print(plant_id)
+    models.Plant.objects.get(id=plant_id).delete()
+
+    return redirect('/plants')
