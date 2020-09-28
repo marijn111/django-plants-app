@@ -1,7 +1,23 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
+import datetime
+import pytz
+
+utc=pytz.UTC
+
+
+STANDPLACE_CHOICES = [
+    ('sun', 'Direct Sunlight'),
+    ('light', 'Indirect Sunlight'),
+    ('shadow', 'Shadow'),
+    ('any', "Doesn't matter")
+]
+
+
 User = get_user_model()
+
+
 class LoginForm(forms.Form):
 
     email    = forms.CharField(required=True, widget=forms.TextInput(attrs={
@@ -59,4 +75,52 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError('Passwords must match!')
 
         return data
+
+
+class AddPlantForm(forms.Form):
+
+    name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'input',
+        'placeholder': 'Name of your plant bro'
+    }))
+
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'textarea',
+        'placeholder': 'Say something about your plant bro...',
+        'rows': 3
+    }))
+
+    age = forms.DateTimeField(widget=forms.DateInput(attrs={
+        'type': 'date'
+    }))
+
+    image = forms.FileField(required=False,widget=forms.FileInput(attrs={
+        'class': 'file-input'
+    }))
+
+    watering = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder': 'How much water does your plant need bro?',
+        'class': 'textarea',
+        'rows': 3
+    }))
+
+    standplace = forms.CharField(widget=forms.Select(choices=STANDPLACE_CHOICES))
+
+    def clean_age(self):
+        plant_age = self.cleaned_data.get('age')
+        now = datetime.datetime.now()
+        now = now.replace(tzinfo=utc)
+
+        if plant_age > now:
+            raise forms.ValidationError("Your plant can not be from the future bro...")
+        return plant_age
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image', None)
+        if not image:
+            # do some validation, if it fails
+            raise forms.ValidationError('epic image fail')
+        return image
+
+
 

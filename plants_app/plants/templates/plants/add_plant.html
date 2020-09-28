@@ -1,0 +1,95 @@
+{% extends 'plants/main.html' %}
+{% load static %}
+
+{% block content %}
+
+    <section class="hero is-primary is-fullheight">
+          <div class="hero-body">
+              <div class="container">
+                <div class="columns is-5-tablet is-4-desktop is-3-widescreen">
+                    <div class="column">
+                        <form method="POST" class="box">
+                              {% csrf_token %}
+                            {{ form.errors }}
+                            <div class="field has-text-centered">
+                                <img src="images/logo.png" width="167">
+                            </div>
+                            <div class="field">
+                                <label class="label">Name</label>
+                                <div class="control has-icons-left">
+                                    {{ form.name }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Description</label>
+                                  <div class="control">
+                                    {{ form.description }}
+                                  </div>
+                                </div>
+                            <div class="field">
+                                <label class="label">Age</label>
+                                <div class="control">
+                                    {{ form.age }}
+                                </div>
+                            </div>
+                           <div class="field">
+                                <label class="label">Watering</label>
+                                <div class="control">
+                                    {{ form.watering }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Standing place</label>
+                                <div class="control">
+                                    {{ form.standplace }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="file has-name is-left">
+                                  <label class="file-label">
+                                      {{ form.image }}
+                                    <span class="file-cta">
+                                      <span class="file-icon">
+                                        <i class="fa fa-upload"></i>
+                                      </span>
+                                      <span class="file-label">
+                                        Choose a file…
+                                      </span>
+                                    </span>
+                                    <span class="file-name" id="file_name" hidden>
+
+                                    </span>
+                                  </label>
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                              <div class="control">
+                                <button type="submit" class="button is-primary">Submit</button>
+                              </div>
+                              <div class="control">
+                                  <a href="{% url 'plant-list' %}">
+                                    <button class="button is-light">Cancel</button>
+                                  </a>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+              </div>
+          </div>
+      </section>
+
+    <script>
+        jQuery(document).ready(function () {
+
+            jQuery('#id_image').change(function () {
+                var file = jQuery('#id_image')[0].files[0].name;
+                jQuery('#file_name').text(file);
+                jQuery('#file_name').show()
+
+            });
+        });
+
+    </script>
+
+{% endblock %}

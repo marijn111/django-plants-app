@@ -51,7 +51,7 @@
                     <div class="card-image">
 
                         <figure class="image is-4by3">
-                          <img src="#" alt="Placeholder image" class="modal-button" data-target="modal-image2">
+                          <img src="{{ plant.imageURL }}" alt="Placeholder image" class="modal-button" data-target="modal-image2">
                         </figure>
 
                     </div>
@@ -61,7 +61,9 @@
                             <h4>{{ plant.name }}</h4>
                         </a>
                           <p>{{ plant.description }}</p>
-                            <span class="button is-link modal-button" data-target="modal-image2">Image modal</span>
+                            <a href="{% url 'plant_item' plant.id %}">
+                                <span class="button is-primary modal-button" data-target="modal-image2">View Plant</span>
+                            </a>
 
                             <a class="right" href='{% url "delete_plant" plant.id %}'>
                                 <button class='delete'></button>

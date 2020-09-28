@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib.auth import authenticate, login, get_user_model, logout
@@ -21,7 +22,6 @@ def login_page(request):
     if request.POST:
         form = forms.LoginForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
 
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
@@ -32,11 +32,9 @@ def login_page(request):
                 login(request, user)
 
                 # redirect to succesfull page
-                print('logged in yay')
                 return redirect('/plants')
             else:
 
-                print('nope')
                 print(form.errors)
             # context['form'] = forms.LoginForm()
 
@@ -101,7 +99,45 @@ class PlantItemView(LoginRequiredMixin, DetailView):
 
 
 def delete_plant(request, plant_id):
-    print(plant_id)
     models.Plant.objects.get(id=plant_id).delete()
 
     return redirect('/plants')
+
+
+@login_required(login_url='/login')
+def new_plant(request):
+
+    if request.POST:
+
+        form = forms.AddPlantForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            name = form.cleaned_data.get('name')
+            description = form.cleaned_data.get('description')
+            age = form.cleaned_data.get('age')
+            watering = form.cleaned_data.get('watering')
+            standplace = form.cleaned_data.get('standplace')
+            image = form.cleaned_data.get('image')
+
+            user = request.user
+
+            newly_added_plant = models.Plant.objects.create(
+                user=user,
+                name=name,
+                description=description,
+                watering=watering,
+                standplace=standplace,
+                age=age,
+                image=image
+            )
+            newly_added_plant.save()
+
+            if newly_added_plant is not None:
+                return redirect('/plants')
+
+    else:
+        form = forms.AddPlantForm()
+
+    context = {'form': form}
+
+    return render(request, 'plants/add_plant.html', context)
