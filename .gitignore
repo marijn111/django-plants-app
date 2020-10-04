@@ -1,2 +1,5 @@
 .idea/
 plants_app/plants_app/secrets.py
+plants_app/plants_app/__pycache__/
+plants_app/plants/__pycache__/
+plants_app/plants/migrations/__pycache__
