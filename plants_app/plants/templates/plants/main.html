@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -32,6 +34,9 @@
     <div class="navbar-end">
       <div class="navbar-item">
       {% if request.user.is_authenticated %}
+        <a href="{% url 'tasks' %}" class="navbar-item">
+            Your tasks bro
+        </a>
       <a href="{% url 'plant-list' %}" class="navbar-item">
         Your plants bro
       </a>

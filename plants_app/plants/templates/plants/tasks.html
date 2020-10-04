@@ -1,0 +1,66 @@
+{% extends 'plants/main.html' %}
+{% load static %}
+{% block content %}
+
+    <section class="container">
+        <div class="card-table">
+            <div class="content">
+                <form method="POST" class="box" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="field has-addons">
+                          <div class="control">
+                              {{ form.date }}
+                          </div>
+                          <div class="control">
+                            <button type="submit" class="button is-info">
+                              Search
+                            </button>
+                          </div>
+                    </div>
+                </form>
+
+                {% if message %}
+                <div class="notification is-primary">
+                  <button class="delete"></button>
+                    {{ message }}
+                </div>
+                {% else %}
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            Tasks for: {{ date|date:'d-m-Y' }}
+                        </p>
+                    </header>
+                    <table class="table is-fullwidth is-striped">
+                        <tbody>
+                            {% for task in tasks %}
+                                <tr>
+                                    <td><i class="fa fa-bell-o"></i></td>
+                                    <td>{{ task.description }}</td>
+                                    <td class="level-right"><a id="completed_task" class="button is-small is-primary" href="#">Complete</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+            <div id="giphy">
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+
+    jQuery(document).ready(function () {
+
+        jQuery('#completed_task').click(function () {
+            let src = "{% static 'images/giphy.gif' %}";
+            jQuery('#giphy').prepend("<img src='{% static 'images/giphy.gif' %}' />");
+        });
+
+    });
+
+
+    </script>
+
+{% endblock %}

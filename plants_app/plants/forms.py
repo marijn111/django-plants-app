@@ -98,10 +98,13 @@ class AddPlantForm(forms.Form):
         'class': 'file-input'
     }))
 
-    watering = forms.CharField(widget=forms.Textarea(attrs={
-        'placeholder': 'How much water does your plant need bro?',
-        'class': 'textarea',
-        'rows': 3
+    watering = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'placeholder': 'How many times per month does your plant need water bro?',
+        'class': 'input'
+    }))
+
+    last_watered = forms.DateTimeField(widget=forms.DateInput(attrs={
+        'type': 'date'
     }))
 
     standplace = forms.CharField(widget=forms.Select(choices=STANDPLACE_CHOICES))
@@ -122,5 +125,31 @@ class AddPlantForm(forms.Form):
             raise forms.ValidationError('epic image fail')
         return image
 
+    def clean_watering(self):
+        watering = self.cleaned_data.get('watering')
+
+        # if not watering.is_integer():
+        #     raise forms.ValidationError('watering must be a number bro...')
+        if watering > 31:
+            raise forms.ValidationError("You can't water your plant more than 1 time per day bro...")
+
+        return watering
+
+    def clean_last_watered(self):
+        last_watered = self.cleaned_data.get('last_watered')
+        now = datetime.datetime.now()
+        now = now.replace(tzinfo=utc)
+
+        if last_watered > now:
+            raise forms.ValidationError("Did you really last water your plant in the future bro...")
+
+        return last_watered
+
+
+class TaskDateFilter(forms.Form):
+    date = forms.DateTimeField(widget=forms.DateInput(attrs={
+        'type': 'date',
+        'placeholder': 'select a date'
+    }))
 
 

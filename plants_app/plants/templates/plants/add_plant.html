@@ -6,14 +6,11 @@
     <section class="hero is-primary is-fullheight">
           <div class="hero-body">
               <div class="container">
-                <div class="columns is-5-tablet is-4-desktop is-3-widescreen">
-                    <div class="column">
-                        <form method="POST" class="box">
+                <div class="columns is-5-tablet is-4-desktop is-3-widescreen is-centered">
+                    <div class="column is-6">
+                        <form method="POST" class="box" enctype="multipart/form-data">
                               {% csrf_token %}
                             {{ form.errors }}
-                            <div class="field has-text-centered">
-                                <img src="images/logo.png" width="167">
-                            </div>
                             <div class="field">
                                 <label class="label">Name</label>
                                 <div class="control has-icons-left">
@@ -32,6 +29,12 @@
                                     {{ form.age }}
                                 </div>
                             </div>
+                            <div class="field">
+                                <label class="label">Last watered</label>
+                                <div class="control">
+                                    {{ form.last_watered }}
+                                </div>
+                            </div>
                            <div class="field">
                                 <label class="label">Watering</label>
                                 <div class="control">
@@ -45,6 +48,7 @@
                                 </div>
                             </div>
                             <div class="field">
+                                <label class="label">Photo</label>
                                 <div class="file has-name is-left">
                                   <label class="file-label">
                                       {{ form.image }}
@@ -64,7 +68,7 @@
                             </div>
                             <div class="field is-grouped">
                               <div class="control">
-                                <button type="submit" class="button is-primary">Submit</button>
+                                <button type="submit" class="button is-primary">Add Plant</button>
                               </div>
                               <div class="control">
                                   <a href="{% url 'plant-list' %}">

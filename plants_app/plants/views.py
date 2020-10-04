@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login, get_user_model, logout
 from . import forms
 from . import models
 
+import datetime
+
 
 User = get_user_model()
 
@@ -118,6 +120,11 @@ def new_plant(request):
             watering = form.cleaned_data.get('watering')
             standplace = form.cleaned_data.get('standplace')
             image = form.cleaned_data.get('image')
+            last_watered = form.cleaned_data.get('last_watered')
+
+            water_interval_days = round(31 / watering)
+
+            next_water_day = last_watered + datetime.timedelta(days=water_interval_days)
 
             user = request.user
 
@@ -132,7 +139,16 @@ def new_plant(request):
             )
             newly_added_plant.save()
 
-            if newly_added_plant is not None:
+            next_watering_task = models.Task.objects.create(
+                user=user,
+                plant=newly_added_plant,
+                description="Give {} some water bro".format(name),
+                date=next_water_day
+            )
+
+            next_watering_task.save()
+
+            if newly_added_plant is not None and next_watering_task is not None:
                 return redirect('/plants')
 
     else:
@@ -141,3 +157,32 @@ def new_plant(request):
     context = {'form': form}
 
     return render(request, 'plants/add_plant.html', context)
+
+
+@login_required
+def tasks(request):
+
+    context = {}
+
+    if request.POST:
+        form = forms.TaskDateFilter(request.POST)
+
+        if form.is_valid():
+            date = form.cleaned_data.get('date')
+            print(date)
+
+    else:
+        form = forms.TaskDateFilter()
+        date = datetime.datetime.now()
+
+    context['date'] = date
+    context['form'] = form
+
+    tasks = models.Task.objects.filter(user=request.user, date=date)
+
+    if tasks.count() < 1:
+        context['message'] = "No tasks for the selected date bro.."
+    else:
+        context['tasks'] = tasks
+
+    return render(request, 'plants/tasks.html', context)
