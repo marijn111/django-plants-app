@@ -1,9 +1,32 @@
 {% extends 'plants/main.html' %}
+{% load static %}
 {% block content %}
     <section class="section">
-    <div class="is-centered">
-        <h1 class="is-centered">Welcome Bro!!</h1>
-    </div>
+    <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns is-vcentered">
+                    <div class="column is-5">
+                        <figure class="image is-4by3">
+                            <img src="{% static 'images/homepage.jpg' %}" alt="Description">
+                        </figure>
+                    </div>
+                    <div class="column is-6 is-offset-1">
+                        <h1 class="title is-2">
+                            Plantbro
+                        </h1>
+                        <h2 class="subtitle is-4">
+                            Nurture your plants like you nurture yourself bro: with eazzz
+                        </h2>
+                        <br>
+                        <p class="has-text-centered">
+                            <a href="{% url 'register' %}" class="button is-medium is-primary is-outlined">
+                                Register
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
 {% endblock content %}
